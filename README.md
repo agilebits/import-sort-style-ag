@@ -1,7 +1,7 @@
-# import-sort-style-module
+# import-sort-style-ag
 
 A style for [import-sort](https://github.com/renke/import-sort) that is focused
-on modules.
+on modules, and sorts imported members naturally.
 
 ```js
 // Absolute modules with side effects (not sorted because order may matter)
