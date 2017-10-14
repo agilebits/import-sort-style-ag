@@ -1,10 +1,9 @@
 import {IStyleAPI, IStyleItem} from "import-sort-style";
 
-export default function(styleApi: IStyleAPI): Array<IStyleItem> {
+export default function(styleApi: IStyleAPI): IStyleItem[] {
   const {
     alias,
     and,
-    dotSegmentCount,
     hasNoMember,
     isAbsoluteModule,
     isNodeModule,
@@ -33,7 +32,22 @@ export default function(styleApi: IStyleAPI): Array<IStyleItem> {
 
     // import … from "./foo";
     // import … from "../foo";
-    {match: isRelativeModule, sort: [dotSegmentCount, moduleName(naturally)], sortNamedMembers: alias(naturally)},
+    {match: isRelativeModule, sort: [agDotSegmentCount, moduleName(naturally)], sortNamedMembers: alias(naturally)},
     {separator: true},
   ];
+}
+
+function agDotSegmentCount(firstImport, secondImport) {
+  const firstDotString = (firstImport.moduleName.match(/^(?:\.\.?\/)+/) || [""])[0];
+  const secondDotString = (firstImport.moduleName.match(/^(?:\.\.?\/)+/) || [""])[0];
+  const firstCount = (firstDotString.match(/\./g) || []).length;
+  const secondCount = (secondDotString.match(/\./g) || []).length;
+
+  if (firstCount > secondCount) {
+      return -1;
+  }
+  if (firstCount < secondCount) {
+      return 1;
+  }
+  return 0;
 }
